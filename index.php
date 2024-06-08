@@ -1,47 +1,10 @@
-<?php 
-ob_start();
-@session_start();
-require_once("config.php");
-function format_names($name=NULL) 
-{
-	/* Formats a first or last name, and returns the formatted version */
-	if (empty($name))
-		return false;
-		
-	// Initially set the string to lower, to work on it
-	$name = strtolower($name);
-	// Run through and uppercase any multi-barrelled name
-	$names_array = explode('-',$name);
-	for ($i = 0; $i < count($names_array); $i++) 
-	{	
-		// "McDonald", "O'Conner"..
-		if (strncmp($names_array[$i],'mc',2) == 0 || preg_match('/^[oO]\'[a-zA-Z]/',$names_array[$i])) 
-		{
-			$names_array[$i][2] = strtoupper($names_array[$i][2]);
-		}
-		// Always set the first letter to uppercase, no matter what
-		$names_array[$i] = ucfirst($names_array[$i]);
-	}
-	// Piece the names back together
-	$name = implode('-',$names_array);
-	// Return upper-casing on all missed (but required) elements of the $name var
-	return ucwords($name);
-}
 
-function trash_puller($value) {
-$value = @trim($value);
-if(get_magic_quotes_gpc()){
-$value = stripslashes($value);
-}
-return mysql_real_escape_string($value);
-}
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php $select_fetch_schoolname="SELECT * FROM schoolname limit 1"; $query_select_fetch_schoolname = @mysql_query($select_fetch_schoolname); while ($row = @mysql_fetch_array($query_select_fetch_schoolname)){ $School_Name = $row['School_Name'] ;} echo $School_Name; ?></title>
+	<title>Effective Healthcare</title>
 	<link href="css/style.css" rel="stylesheet" type="text/css">
 	<link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
 	<link rel="stylesheet" href="css/style2.css" type="text/css">
@@ -74,98 +37,10 @@ return mysql_real_escape_string($value);
 				<a href="javascript:void(0);" class="logo">
 					<img src="picture/school_logo.png" />
 				</a>
-		         <span class="desktop-navigation pull-right hidden-mobile">
-					<?php
-					if(@$_SESSION['LASTNAME'] == "" && @$_SESSION['FIRSTNAME'] == ""){ 
-					}else{
-					?>
-					<a>
-					<input class="buttons" title="Click to logout" type="button" value="Logout" onclick="if(confirm('Do you really mean to logout? If YES then click on the OK button otherwise click on the Cancel button to stop.')){
-					window.location.replace('logout.php');
-					} 
-					return false;"
-					style="cursor:pointer; padding:7px;">
-					</a>
-					<?php
-					}
-					?>
-					<a>
-					<?php
-					if(@$_SESSION['LASTNAME'] == "" && @$_SESSION['FIRSTNAME'] == ""){ 
-					}else{
-					if(empty($_SESSION['PHOTO'])){
-					   $pix="avatar.jpg";
-					   }else{
-					   $pix=$_SESSION['PHOTO'];
-					   }
-					echo "<img src='Uploads/".$pix."' style='height:35px; width:35px; border-radius:40px; float:right;'/><br/>";
-					}
-					?>
-					</a>
-				</span>
 			</div>
 		</nav>
 	</header>
 <!--mobile navigation-->
-<div class="bs-btn-icon-toggle fixed pull-right hidden-desktop">
-	<button id="toggle-xs-menu" type="button" class="tcon tcon-menu--xcross pointer" aria-label="toggle menu" data-bs="offCanvas" data-backdrop="true" data-menu-id="#offcanvas">
-	<?php
-		if(@$_SESSION['LASTNAME'] == "" && @$_SESSION['FIRSTNAME'] == ""){ 
-	?>
-		<span class="tcon-menu__lines" aria-hidden="true"></span>
-		<span class="tcon-visuallyhidden">toggle menu</span>
-	<?php
-		}else{
-	?>
-		<span class="" style="">
-			<?php
-				if(empty($_SESSION['PHOTO'])){
-				$pix="avatar.jpg";
-				}else{
-				$pix=$_SESSION['PHOTO'];
-				}
-				echo "<img src='Uploads/".$pix."' style='height:40px; width:40px; border-radius:40px; float:right;'/><br/>";
-			?>
-		</span>
-	<?php
-		}
-	?>
-	</button>
-</div>
-<div id="offcanvas" class="offcanvas-pane hidden-desktop left-side close-option" style="background-color:;">
-<?php
-	if(@$_SESSION['LASTNAME'] == "" && @$_SESSION['FIRSTNAME'] == ""){ 
-?>
-	<div class="inner-menu text-uppercase" id="xs-menu" role="tablist" aria-multiselectable="true">
-	        <div class="panel panel-menu">
-			<a class="no-collapse" href="index.php">
-				Home
-			</a>
-	        </div>
-       </div>
-<?php
-	}else{
-?>
-	<div class="inner-menu text-uppercase" id="xs-menu" role="tablist" aria-multiselectable="true">
-	        <div class="panel panel-menu">
-			<a class="no-collapse" href="index.php">
-				Home
-			</a>
-	        </div>
-	        <div class="panel panel-menu">
-			<div class="input-group" style="">
-				<input class="buttons" title="Click to logout" type="button" value="Logout" onclick="if(confirm('Do you really mean to logout? If YES then click on the OK button otherwise click on the Cancel button to stop.')){
-				window.location.replace('logout.php');
-				} 
-				return false;"
-				style="cursor:pointer; padding:7px;">
-			</div>
-	        </div>
-       </div>
-<?php
-	}
-?>
-</div>
 <div id="offcanvas-backdrop" class="offcanvas-backdrop"></div>
 <div id="main-content" role="main">
 
@@ -270,13 +145,6 @@ return mysql_real_escape_string($value);
 																	</div>
 																</div>
 															</div>
-															<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px; margin-bottom:20px;">
-																  <?php
-																	if(isset($_GET['msg']) && !empty($_GET['msg'])){
-																		echo $_GET['msg'];
-																	 }
-																  ?>
-															</div>
 														</form>
 													</div>
 												</div>
@@ -295,10 +163,6 @@ return mysql_real_escape_string($value);
 			</div>
 		</div>
 	</section>
-  <!-- FOOTER -->
-	  <?php
-		include('footer.php');
-	  ?>
   <!-- END FOOTER -->
 </div>
 
